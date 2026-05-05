@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<title>Mensagem Final – Formadores em Ação</title>
+
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        background: #efe9ff;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: 40px;
+    }
+
+    h1 {
+        color: #4a148c;
+        text-align: center;
+        font-size: 32px;
+        margin-bottom: 10px;
+    }
+
+    p {
+        text-align: center;
+        max-width: 700px;
+        font-size: 18px;
+        color: #4a148c;
+    }
+
+    #scratchArea {
+        width: 500px;
+        height: 320px;
+        position: relative;
+        margin-top: 25px;
+        border: 3px solid #4a148c;
+        border-radius: 12px;
+        overflow: hidden;
+        background: white;
+    }
+
+    #message {
+        width: 100%;
+        height: 100%;
+        padding: 25px;
+        box-sizing: border-box;
+        text-align: justify;
+        font-size: 18px;
+        color: #4a148c;
+        font-weight: bold;
+        line-height: 1.4;
+    }
+
+    canvas {
+        position: absolute;
+        top: 0;
+        left: 0;
+    }
+
+    #reset {
+        margin-top: 20px;
+        padding: 12px 24px;
+        background: #4a148c;
+        color: white;
+        border: none;
+        border-radius: 6px;
+        cursor: pointer;
+        font-size: 16px;
+    }
+
+    #reset:hover {
+        background: #6a1b9a;
+    }
+</style>
+</head>
+
+<body>
+
+<h1>Formadores em Ação – Literatura e Sociedade</h1>
+<p>Passe o mouse (ou o dedo) para revelar a mensagem final.</p>
+
+<div id="scratchArea">
+    <div id="message">
+        Chegamos ao fim de nossos estudos com uma certeza: a identidade é um espelho que reflete a sociedade.
+        Neste projeto integrador, vimos que entender a si mesmo exige olhar para o outro. A literatura nos permitiu calçar os sapatos de diferentes identidades, enquanto a sociologia e a filosofia nos deram as ferramentas para entender os fios que tecem essa rede.
+        Encerrar este ciclo é celebrar a diversidade de vozes que compõem quem somos. Obrigado por compartilharem suas identidades e saberes nesta caminhada!
+    </div>
+
+    <canvas id="cover"></canvas>
+</div>
+
+<button id="reset">Cobrir novamente</button>
+
+<script>
+    const canvas = document.getElementById("cover");
+    const ctx = canvas.getContext("2d");
+    const area = document.getElementById("scratchArea");
+
+    canvas.width = area.clientWidth;
+    canvas.height = area.clientHeight;
+
+    function coverCanvas() {
+        ctx.globalCompositeOperation = "source-over";
+        ctx.fillStyle = "#b39ddb";
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+    }
+
+    coverCanvas();
+
+    let scratching = false;
+
+    function getPos(e) {
+        const rect = canvas.getBoundingClientRect();
+        const x = (e.touches ? e.touches[0].clientX : e.clientX) - rect.left;
+        const y = (e.touches ? e.touches[0].clientY : e.clientY) - rect.top;
+        return { x, y };
+    }
+
+    function scratch(e) {
+        if (!scratching) return;
+        const pos = getPos(e);
+        ctx.globalCompositeOperation = "destination-out";
+        ctx.beginPath();
+        ctx.arc(pos.x, pos.y, 30, 0, Math.PI * 2);
+        ctx.fill();
+    }
+
+    canvas.addEventListener("mousedown", () => scratching = true);
+    canvas.addEventListener("mouseup", () => scratching = false);
+    canvas.addEventListener("mousemove", scratch);
+
+    canvas.addEventListener("touchstart", () => scratching = true);
+    canvas.addEventListener("touchend", () => scratching = false);
+    canvas.addEventListener("touchmove", scratch);
+
+    document.getElementById("reset").addEventListener("click", coverCanvas);
+</script>
+
+</body>
+</html>
